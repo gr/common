@@ -1,0 +1,20 @@
+Common:
+    This form is created for testing web-resources.
+    By this form you can make POST/GET http-request with parameters
+    to any http:\\domain\action_script.
+    It created by html + js, using JQuery framework.
+
+How it work:
+    In first step you must load html file by browser,
+    then fill fields and press send-button.
+    When send-button was pressed, jscript create new form,
+    add parameters to form, switch POST/GET method and add action script.
+    In the end of form creation, form will submit and make http-request.
+    
+    For easy tool using is a get uqery string field,
+    you can copy URL from browser to this field and action script 
+    and varible fields will auto fill. Then you must customize form
+    and press submit.
+
+Thanks for help:
+    Igor Spisivtsev aka lork

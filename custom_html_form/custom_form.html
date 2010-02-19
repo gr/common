@@ -27,7 +27,7 @@
 		
         /* Исправить строку в текстэрии при изменнеии параметров
          */
-        $("p.parent input.param-name, p.parent input.param-value, input#option-action").bind('click keyup', function() {
+        $("p.parent input.param-name, p.parent input.param-value, input#option-action").bind('keyup', function() {
 		    var result_string = $("input#option-action").val() + '?';
 		    for ( i = 0; i < $("p.params input.param-name").length; i++) {
   				result_string += $("p.params input.param-name")[i].value + '=' + $("p.params input.param-value")[i].value;
@@ -40,7 +40,7 @@
 		
 		/* Заменить родителя клоном
     	 */
-		$("p.parent").hide().clone(true).removeClass("parent").addClass("params").insertBefore("p.add-param").show();
+		$("p.parent").hide();//.clone(true).removeClass("parent").addClass("params").insertBefore("p.add-param").show();
 		
 		/* Орабатываем изменения в Get Query String
 		 */
@@ -48,10 +48,7 @@
 		/* Если строка с обрататывающим скриптом, посдставляем его в Action URL
 		 * Иначе это строка с переменными, подставляем только переменные
 		 */
-		    //$("textarea").val(decodeURIComponent($("textarea").val().replace(/\+/g,  " ")));
 		    var parameters = $("textarea").val().split("?");
-		    //var decoded_string = decodeURIComponent($("textarea").val().replace(/\+/g,  " "));
-		    //var parameters = decoded_string.split("?");
 		    if (parameters.length > 1){
 		        $("input#option-action").val(parameters[0]);
 		    }
@@ -63,8 +60,8 @@
                 if (varible.length == 2){
                     $("p.parent").clone(true).hide().removeClass("parent").addClass("params").insertBefore("p.add-param").slideDown();
                     var l = $("p.params input.param-name").length - 1;
-                    $("p.params input.param-name")[l].value = varible[0];
-                    $("p.params input.param-value")[l].value = varible[1];
+                    $("p.params input.param-name")[l].value = decodeURIComponent(varible[0].replace(/\+/g, '%20'));
+                    $("p.params input.param-value")[l].value = decodeURIComponent(varible[1].replace(/\+/g, '%20')); //varible[1]
                 }
   			}
 		});
@@ -266,8 +263,8 @@
   	</form>
   	<h2>Parameters to Send</h2>
   	<form>
-  	    <p><label for="param-string">Get Query String</label><br><textarea id="param-string" name="param-string" cols="74" rows="5"></textarea></p>
-  		<p class="parent"><label for="">name = </label>"<input class="param-name" name="param-name" type="text">" <label for="">value = </label>"<input class="param-value" name="param-value" type="text">" <a href="#" title="Delete Parameter" class="local del-param"><span class="smbl">&otimes;</span></a></p>
+  	    <p><label for="param-string">Get Query String</label><br><textarea id="param-string" name="param-string" cols="100" rows="5"></textarea></p>
+  		<p class="parent"><label for="">name = </label>"<input class="param-name" name="param-name" type="text">" <label for="">value = </label>"<input class="param-value" name="param-value" type="text" size="47"">" <a href="#" title="Delete Parameter" class="local del-param"><span class="smbl">&otimes;</span></a></p>
   		<p class="add-param"><a href="#" title="Add Parameter" class="local add-param"><span class="smbl">&oplus; </span><span class="text">Add</span></a></p>
   		<p class="send-button"><input id="button-submit" type="submit" value="Send"></p>
   	</form>
