@@ -1,0 +1,276 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Request</title>
+    <script src="./js/jquery-1.4.1.min.js" type="text/javascript"></script>
+    <script type="text/javascript">
+
+    $(document).ready(function() {
+    
+        /* Повесить события на ссылки Add и Delete
+    	 */
+    	$("a.add-param").click(function() {
+  			$("p.parent").clone(true).hide().removeClass("parent").addClass("params").insertBefore("p.add-param").slideDown();
+		});
+		$("a.del-param").click(function() {
+  			$(this).parent().remove();
+  			var result_string = $("input#option-action").val() + '?';
+		    for ( i = 0; i < $("p.params input.param-name").length; i++) {
+  				result_string += $("p.params input.param-name")[i].value + '=' + $("p.params input.param-value")[i].value;
+  				if (i < $("p.params input.param-name").length -1){ 
+  				    result_string += '&';
+  				}
+  			}
+  			$("textarea").val(result_string);
+		});
+		
+        /* Исправить строку в текстэрии при изменнеии параметров
+         */
+        $("p.parent input.param-name, p.parent input.param-value, input#option-action").bind('click keyup', function() {
+		    var result_string = $("input#option-action").val() + '?';
+		    for ( i = 0; i < $("p.params input.param-name").length; i++) {
+  				result_string += $("p.params input.param-name")[i].value + '=' + $("p.params input.param-value")[i].value;
+  				if (i < $("p.params input.param-name").length -1){ 
+  				    result_string += '&';
+  				}
+  			}
+  			$("textarea").val(result_string);
+		});	
+		
+		/* Заменить родителя клоном
+    	 */
+		$("p.parent").hide().clone(true).removeClass("parent").addClass("params").insertBefore("p.add-param").show();
+		
+		/* Орабатываем изменения в Get Query String
+		 */
+		$("textarea").bind('keyup', function() {
+		/* Если строка с обрататывающим скриптом, посдставляем его в Action URL
+		 * Иначе это строка с переменными, подставляем только переменные
+		 */
+		    //$("textarea").val(decodeURIComponent($("textarea").val().replace(/\+/g,  " ")));
+		    var parameters = $("textarea").val().split("?");
+		    //var decoded_string = decodeURIComponent($("textarea").val().replace(/\+/g,  " "));
+		    //var parameters = decoded_string.split("?");
+		    if (parameters.length > 1){
+		        $("input#option-action").val(parameters[0]);
+		    }
+		    parameters = parameters.pop().split("&");
+		    $("p.params").each(function(index) { $(this).remove(); });
+              
+		    for ( i = 0; i < parameters.length; i++) {
+                var varible = parameters[i].split("=");
+                if (varible.length == 2){
+                    $("p.parent").clone(true).hide().removeClass("parent").addClass("params").insertBefore("p.add-param").slideDown();
+                    var l = $("p.params input.param-name").length - 1;
+                    $("p.params input.param-name")[l].value = varible[0];
+                    $("p.params input.param-value")[l].value = varible[1];
+                }
+  			}
+		});
+		
+		/* Повесить отправку формы на кнопку SUBMIT
+		 */
+		$("input#button-submit").click(function() {
+  			var optAction = $("input[name='option-action']").val();
+  			var optMethod = $("input[name='option-type']:checked").val();
+  			var paramNames = $("p.params input.param-name").length;
+  			 			
+  			$("div#box").empty().append('<form id="sendme" action="' + optAction + '" method="' + optMethod + '"></form>');
+  			
+  			for ( i = 0; i < $("p.params input.param-name").length; i++) {
+  				$("form#sendme").append('<input type="hidden" name="' + $("p.params input.param-name")[i].value + '" value="' + $("p.params input.param-value")[i].value + '">');
+  			}
+  			
+  			$("form#sendme").submit();
+  			
+  			return false;
+		});	
+    });
+    </script>
+    <style type="text/css">
+    body {
+      background-color: #fff;
+      /*border-top: solid .5em #c30;*/
+      font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+      line-height: 1.4em;
+      margin: 0;
+      padding: 0 3.8em .2em 3.8em;
+    }
+
+    hr {
+      background-color: #111;
+      border: 0;
+      border-collapse: collapse;
+      border-top: dashed .5em #fc0;
+      margin: 0 -3.8em 0 -3.8em;
+      padding: 0;
+      height: 0;
+    }
+
+    code {
+      display: block;
+    }
+
+    pre, code {
+      background-color: #ffd;
+      font-family: Monaco, "Courier New", Courier, monospace;
+      font-size: 13px;
+      margin: auto -1em;
+      padding: .5em 1em;
+      overflow: auto;
+    }
+
+    samp {
+      font-family: Monaco, "Courier New", Courier, monospace;
+      font-size: .8125em;
+    }
+
+    textarea {
+      font-family: Monaco, "Courier New", Courier, monospace;
+      font-size: 12px;
+    }
+
+    ol {
+      background-color: #ffd;
+      margin: auto -3em;
+      padding: .1em 3em .5em 3em;
+    }
+
+    ol li {
+      margin-top: 1em;
+      margin-left: 0;
+      margin-bottom: 2em;
+    }
+
+    h1 {
+      font-size: 2em;
+      margin-top: .875em;
+    }
+
+    h2 {
+      margin-top: 2em;
+      margin-bottom: 0;
+    }
+
+    h3 {
+      color: #999;
+      margin-top: 1.6em;
+      margin-bottom: 0;
+    }
+
+    span.par-name {
+      color: #999;
+    }
+
+    span.db-name {
+      text-transform: capitalize;
+    }
+
+    span.q-type {
+      text-transform: uppercase;
+    }
+
+    span.s-port {
+      margin-left: .2em;
+    }
+
+    span.s-addr {
+      margin-right: .1em;
+    }
+
+    sup {
+      font-size: .6875em;
+      line-height: 1ex;
+    }
+
+    p.date {
+      text-transform: lowercase;
+    }
+
+    a {
+      border-bottom: solid 1px #039;
+      color: #039;
+      text-decoration: none;
+    }
+    
+    a.local {
+      border-bottom-style: dashed;
+    }
+
+    a:visited {
+      border-bottom: solid 1px #606;
+      color: #606;
+    }
+
+    a:hover {
+      border-bottom: solid 1px #c30;
+      color: #c30;
+    }
+
+    a.help {
+      background-color: #36c;
+      border-bottom: solid 1px #fff;
+      color: #fff;
+      padding-top: 1px;
+      padding-right: 3px;
+      padding-left: 2px;
+      text-decoration: none;
+    }
+
+    a.help:visited {
+      background-color: #969;
+    }
+
+    a.help:hover {
+      background-color: #c30;
+    }
+    
+    a.add-param,
+    a.del-param {
+      border-bottom: none;
+    }
+    
+    a.add-param span.smbl {
+      color: #093;
+      font-size: 1.375em; /* 22px */
+    }
+    
+    a.del-param span.smbl {
+      color: #f00;
+      font-size: 1.375em; /* 22px */
+    }
+    
+    a.add-param span.text,
+    a.del-param span.text {
+      border-bottom-style: dashed;
+      border-bottom-width: 1px;
+    }
+    
+    </style>
+  </head>
+  <body>
+  	<hr>
+  	<h1>Request</h1>
+  	<h2>Options</h2>
+  	<form>
+  		<h3>Action</h3>
+  		<p>
+  			<label for="option-action">URL </label><input type="text" name="option-action" id="option-action" size="60" value="">
+  		</p>
+  		<h3>Type</h3>
+  		<p>
+  			<input type="radio" name="option-type" id="option-type-get" checked="checked" value="GET"><label for="option-type-get"> GET</label><br>
+  			<input type="radio" name="option-type" id="option-type-post" value="POST"><label for="option-type-post"> POST</label>
+  		</p>
+  	</form>
+  	<h2>Parameters to Send</h2>
+  	<form>
+  	    <p><label for="param-string">Get Query String</label><br><textarea id="param-string" name="param-string" cols="74" rows="5"></textarea></p>
+  		<p class="parent"><label for="">name = </label>"<input class="param-name" name="param-name" type="text">" <label for="">value = </label>"<input class="param-value" name="param-value" type="text">" <a href="#" title="Delete Parameter" class="local del-param"><span class="smbl">&otimes;</span></a></p>
+  		<p class="add-param"><a href="#" title="Add Parameter" class="local add-param"><span class="smbl">&oplus; </span><span class="text">Add</span></a></p>
+  		<p class="send-button"><input id="button-submit" type="submit" value="Send"></p>
+  	</form>
+  	<div id="box"></div>
+  </body>
+</html>
